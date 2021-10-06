@@ -9,14 +9,19 @@ package ru.mail.polis.homework.simple;
  */
 public class IntegerAdvancedTask {
 
+    private static final double DELTA = 1e-10;
+    
     /**
      * Сумма первых n-членов геометрической прогрессии с первым элементом a и множителем r
      * a + aq + aq^2 + ... + aq^(n-1)
-     *
+     * <p>
      * Пример: (1, 2, 3) -> 7
      */
     public static long progression(int a, double q, int n) {
-        return 0;
+        if (Math.abs(q - 1.0) < DELTA) {
+            return (long) a * n;
+        }
+        return (long) (a * (1 - Math.pow(q, n)) / (1 - q));
     }
 
     /**
@@ -28,7 +33,20 @@ public class IntegerAdvancedTask {
      * Пример: (10, 3, 5, 5, 20, 11) -> 2
      */
     public static int snake(int up, int right, int down, int left, int grassX, int grassY) {
-        return 0;
+        if (up >= grassY || right >= grassX) {
+            return 1;
+        }
+        int upMove = up - down; // смещение вверх
+        int rightMove = right - left; // смещение вправо
+        if (upMove <= 0 && rightMove <= 0) {
+            return Integer.MAX_VALUE;
+        }
+        int upMoveCount = (int) Math.ceil((double) (grassY - up) / upMove);
+        int rightMoveCount = (int) Math.ceil((double) (grassX - right) / rightMove);
+        if (upMoveCount > 0 && rightMoveCount > 0) {
+            return Math.min(upMoveCount, rightMoveCount) + 1;
+        }
+        return Math.max(upMoveCount, rightMoveCount) + 1;
     }
 
     /**
@@ -38,7 +56,16 @@ public class IntegerAdvancedTask {
      * Пример: (454355, 2) -> D
      */
     public static char kDecimal(int n, int order) {
-        return 0;
+        int hexNums = 0;
+        int buffer = n;
+        for (int i = 0; i < order; i++) {
+            hexNums = buffer % 16;
+            buffer /= 16;
+        }
+        if (hexNums % 16 > 9) {
+            return (char) (hexNums - 10 + 'A');
+        }
+        return (char) (hexNums + '0');
     }
 
     /**
@@ -49,7 +76,18 @@ public class IntegerAdvancedTask {
      * (6726455) -> 2
      */
     public static byte minNumber(long a) {
-        return 0;
+        byte minNum = (byte) (a % 16);
+        byte minPos = 1;
+        byte i = 2;
+        long buffer = a / 16;
+        while (buffer > 0 && minNum != 0) {
+            if (buffer % 16 < minNum) {
+                minNum = (byte) (buffer % 16);
+                minPos = i;
+            }
+            buffer /= 16;
+            i++;
+        }
+        return minPos;
     }
-
 }
